@@ -2,7 +2,6 @@ import json
 
 jsondata = {}
 jsondata["Kuortane"] = []
- 
 with open("position.txt", "r") as file:
     for line in file:
 

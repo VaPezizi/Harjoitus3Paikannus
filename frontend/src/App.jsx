@@ -10,17 +10,16 @@ import 'leaflet/dist/leaflet.css';
 
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import io from 'socket.io-client'
 
 const ShowLocationsInList = ({locations}) => {
-
+  let id = 1
   return (
     <div>
       <h2>Locations</h2>
       <ul>
         {locations.map((location) => (
-          <li key={location.id}>
-            <p>Time: {location.id}, Latitude: {location.latitude}, Longitude: {location.longitude}</p>
+          <li key={id++}>
+            <p>Latitude: {location[0]}, Longitude: {location[1]}</p>
           </li>
         ))}
       </ul>
@@ -29,10 +28,19 @@ const ShowLocationsInList = ({locations}) => {
 }
 
 const ShowMap = ({locations}) => {
-
+  let id = 1
   // Create an array of [latitude, longitude] pairs for the Polyline
-  const positions = locations.map(location => [location.latitude, location.longitude]);
+  const positions = locations.map(location => [location[0], location[1]]);
+  
+  /*const positions = locations.map(location => [
+    {
+      "latitude": locations[0],
+      "longitude": locations[1],
+      "id": id++
+    }
+  ])*/
 
+  console.log(positions)
   return (
     <MapContainer
       center={[62.7903, 22.8406]}
@@ -56,9 +64,14 @@ const App = () => {
   useEffect(() => {
     console.log('useEffect')
 
-    
-    
-  } , [])
+    axios
+    .get('http://localhost:3001/api/locations')
+    .then (response => {
+      console.log('promise fulfilled')
+      // Extract the data array from the server response
+      setLocations(response.data.data)
+    })
+} , []) 
 
   return (
     <div>
